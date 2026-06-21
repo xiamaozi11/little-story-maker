@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  storycraft:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: storycraft-app
+    ports:
+      - "8501:8501"
+    environment:
+      # 通义千问配置（必需）
+      - API_KEY=${API_KEY}
+      - API_ENDPOINT=${API_ENDPOINT:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      - TEXT_MODEL=${TEXT_MODEL:-qwen-plus}
+
+      # 图片服务选择
+      - IMAGE_SERVICE=${IMAGE_SERVICE:-doubao}
+
+      # 豆包配置（可选，如果使用豆包生成图片）
+      - ARK_API_KEY=${ARK_API_KEY}
+      - ARK_BASE_URL=${ARK_BASE_URL:-https://ark.cn-beijing.volces.com/api/v3}
+      - DOUBAO_IMAGE_MODEL=${DOUBAO_IMAGE_MODEL:-doubao-seedream-4-5-251128}
+
+      # 应用配置
+      - DEFAULT_SCENES=${DEFAULT_SCENES:-10}
+      - MAX_SCENES=${MAX_SCENES:-30}
+      - MIN_SCENES=${MIN_SCENES:-1}
+
+      # PDF 配置
+      - PDF_IMAGE_QUALITY=${PDF_IMAGE_QUALITY:-85}
+      - PDF_MAX_IMAGE_DIMENSION=${PDF_MAX_IMAGE_DIMENSION:-1200}
+
+      # 输出配置
+      - OUTPUT_DIR=${OUTPUT_DIR:-output}
+
+    volumes:
+      # 持久化输出目录
+      - ./output:/app/output
+      # 可选：挂载自定义配置
+      # - ./src/storycraft/config.py:/app/src/storycraft/config.py
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+
+networks:
+  default:
+    name: storycraft-network

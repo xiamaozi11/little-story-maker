@@ -1,0 +1,60 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# 环境变量
+.env
+.env.local
+mobile/src/config/bundledDefaults.ts
+
+# 输出文件
+output/
+*.pdf
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Streamlit (but keep config)
+.streamlit/cache/
+!.streamlit/config.toml
+
+# Documentation plans (keep structure but ignore content)
+docs/plans/*
+
+# Service files
+.service.log
+.service.pid
+
+# Claude settings
+.claude/settings.local.json
+
+# Mobile (Expo)
+mobile/node_modules/
+mobile/.expo/
+mobile/dist/
+mobile/tools/
+mobile/.tools/
+mobile/storycraft-*.apk
+mobile/*.apk
+mobile/android/local.properties
+
+# Docs dependencies
+docs/node_modules/
+
+# Mobile (Expo / React Native)
+mobile/node_modules/
+mobile/.expo/
+mobile/android/
+mobile/ios/
+mobile/dist/

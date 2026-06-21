@@ -1,0 +1,29 @@
+[project]
+name = "storycraft"
+version = "1.0.0"
+description = "AI-powered children's picture book generator"
+readme = "README.md"
+requires-python = ">=3.11"
+packages = [
+    { include = "storycraft", from = "src" }
+]
+dependencies = [
+    "httpx>=0.25.0",
+    "pillow>=10.0.0",
+    "pypdf2>=3.0.1",
+    "pytest>=7.4.0",
+    "python-dotenv>=1.0.0",
+    "reportlab>=4.0.0",
+    "streamlit>=1.28.0",
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "volcengine-python-sdk[ark]>=1.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[[tool.uv.index]]
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+default = true
