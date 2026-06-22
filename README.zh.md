@@ -207,9 +207,7 @@ A: 检查 API Key、网络，或切换通义 / 豆包插画服务。
 
 同时也感谢：
 
-- [Streamlit](https://streamlit.io/) — Web 框架
-- [Expo](https://expo.dev/) / [React Native](https://reactnative.dev/) — 移动端
-- [ReportLab](https://www.reportlab.com/) — PDF 生成
+- [MNN](https://github.com/alibaba/MNN) — 本地推理框架（语音 ASR 等）
 - [通义千问](https://tongyi.aliyun.com/) / [豆包](https://www.doubao.com/) — AI 服务
 
 ---

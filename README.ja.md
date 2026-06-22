@@ -175,9 +175,7 @@ MIT — [LICENSE](LICENSE) を参照。
 
 また以下にも感謝します：
 
-- [Streamlit](https://streamlit.io/) — Web フレームワーク
-- [Expo](https://expo.dev/) / [React Native](https://reactnative.dev/) — モバイル
-- [ReportLab](https://www.reportlab.com/) — PDF 生成
+- [MNN](https://github.com/alibaba/MNN) — 端末内推論フレームワーク（ローカル ASR）
 - [通義千問](https://tongyi.aliyun.com/) / [豆包](https://www.doubao.com/) — AI サービス
 
 ---

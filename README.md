@@ -175,9 +175,7 @@ This project extends **[StoryCraft](https://github.com/cn-vhql/StoryCraft)**. We
 
 Also thanks to:
 
-- [Streamlit](https://streamlit.io/) — Web framework
-- [Expo](https://expo.dev/) / [React Native](https://reactnative.dev/) — Mobile
-- [ReportLab](https://www.reportlab.com/) — PDF generation
+- [MNN](https://github.com/alibaba/MNN) — on-device inference (local ASR)
 - [Tongyi Qianwen](https://tongyi.aliyun.com/) / [Doubao](https://www.doubao.com/) — AI services
 
 ---
