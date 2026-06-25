@@ -6,7 +6,7 @@
 ![Python](https://img.shields.io/badge/python-3.11+-green)
 ![License](https://img.shields.io/badge/license-MIT-orange)
 
-**[English](README.md)** | **简体中文** | [日本語](README.ja.md)
+**[English](README.md)** | **简体中文**
 
 ---
 
@@ -203,7 +203,7 @@ A: 检查 API Key、网络，或切换通义 / 豆包插画服务。
 
 ## 🙏 致谢
 
-本项目在 **[StoryCraft](https://github.com/cn-vhql/StoryCraft)** 的基础上扩展开发——感谢 [cn-vhql/StoryCraft](https://github.com/cn-vhql/StoryCraft) 开源的儿童绘本生成核心能力，让我们得以在此基础上打造面向手机端的「小小故事家」，加入语音输入、动漫模式与家庭共创体验。
+感谢开源项目 **[StoryCraft](https://github.com/cn-vhql/StoryCraft)** 的分享与贡献，让我们得以在此基础上打造面向手机端的「小小故事家」，加入语音输入、动漫模式与家庭共创体验。
 
 同时也感谢：
 

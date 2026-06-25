@@ -6,7 +6,7 @@
 [![Python](https://img.shields.io/badge/python-3.11+-green)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-orange)](LICENSE)
 
-**English** | [简体中文](README.zh.md) | [日本語](README.ja.md)
+**English** | [简体中文](README.zh.md)
 
 ---
 
@@ -171,7 +171,7 @@ All story, image, and video content is AI-generated. Parents should review suita
 
 ## 🙏 Acknowledgments
 
-This project extends **[StoryCraft](https://github.com/cn-vhql/StoryCraft)**. We are grateful to [cn-vhql/StoryCraft](https://github.com/cn-vhql/StoryCraft) for open-sourcing the core children's picture book generator — it enabled us to build **Little Story Maker** with mobile voice input, anime mode, and a family-first experience on top.
+Thanks to the open-source project **[StoryCraft](https://github.com/cn-vhql/StoryCraft)** for sharing and contributing — it enabled us to build **Little Story Maker** for mobile, with voice input, anime mode, and a family co-creation experience.
 
 Also thanks to:
 
