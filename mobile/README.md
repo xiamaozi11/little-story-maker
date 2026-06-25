@@ -1,6 +1,6 @@
-# StoryCraft Android 移动端
+# Little Story Maker — Android
 
-纯手机端运行的儿童绘本生成器，**无需自建后端**。App 直接调用通义千问/豆包 AI API，绘本数据保存在手机本地。
+纯手机端运行的儿童绘本与动漫创作 App，**无需自建后端**。App 直接调用通义千问/豆包 AI API，绘本数据保存在手机本地。
 
 ## 架构
 
@@ -43,6 +43,7 @@ npx expo start --android
 |--------|------|----------|
 | 通义千问 API Key | 故事生成、翻译、通义插画 | ✅ 必需 |
 | 豆包 ARK API Key | 豆包插画（更快） | 可选 |
+| Seedance API Key | 动漫视频生成 | 动漫模式需要 |
 
 API Key 仅保存在本机 AsyncStorage，不会上传。
 
@@ -61,16 +62,12 @@ API Key 仅保存在本机 AsyncStorage，不会上传。
 | 插画图片 | `documentDirectory/books/{id}/` |
 | PDF 文件 | `documentDirectory/books/{id}/` |
 
-## 与 Python 后端的关系
-
-- **移动端**：独立运行，不依赖 `api_server.py`
-- **Python 后端**：仍可用于 Streamlit Web 版 (`streamlit run src/app.py`)，与 App 互不影响
-
 ## 构建 APK
 
 ```bash
-npx expo prebuild --platform android
-cd android && ./gradlew assembleRelease
+npm run build:apk:local
 ```
 
 或使用 EAS Build：`eas build --platform android`
+
+语音功能需先下载 ASR 模型：`npm run download:asr-models`

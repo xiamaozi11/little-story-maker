@@ -1,8 +1,8 @@
-# Little Story Maker (小小故事家) 📚
+# Little Story Maker 📚
 
 > Android AI picture book and anime creator for children ages 3–8
 
-[![Version](https://img.shields.io/badge/version-1.0.4-blue)](https://github.com/xiamaozi11/storycraft_children)
+[![Version](https://img.shields.io/badge/version-1.0.4-blue)](https://github.com/xiamaozi11/little-story-maker)
 [![License](https://img.shields.io/badge/license-MIT-orange)](LICENSE)
 
 **English** | [简体中文](README.zh.md)
@@ -11,7 +11,7 @@
 
 ## 🌟 About
 
-**Little Story Maker** (*小小故事家*) is an Android app that helps kids turn imagination into **their own** picture books or short anime clips — using **voice or text** to describe an idea, then AI writes the story, draws illustrations, and exports a shareable PDF or video.
+**Little Story Maker** is an Android app that helps kids turn imagination into **their own** picture books or short anime clips — using **voice or text** to describe an idea, then AI writes the story, draws illustrations, and exports a shareable PDF or video.
 
 Born from a real family project: dad builds the tech, mom reviews child-friendly content, big brother creates anime, little sister reads bedtime stories.
 
@@ -33,7 +33,7 @@ Born from a real family project: dad builds the tech, mom reviews child-friendly
 ## 📁 Project Structure
 
 ```
-storycraft_children/
+little-story-maker/
 └── mobile/                 # Expo / React Native Android app
     ├── app/                # Screens: create, edit, preview, export, anime flow
     └── src/
@@ -56,8 +56,8 @@ More details: [mobile/README.md](mobile/README.md)
 ### Run
 
 ```bash
-git clone https://github.com/xiamaozi11/storycraft_children.git
-cd storycraft_children/mobile
+git clone https://github.com/xiamaozi11/little-story-maker.git
+cd little-story-maker/mobile
 npm install
 npx expo start --android
 ```
@@ -131,7 +131,7 @@ MIT — see [LICENSE](LICENSE).
 
 ## 📞 Contact
 
-- 🐛 [Report issues](https://github.com/xiamaozi11/storycraft_children/issues)
+- 🐛 [Report issues](https://github.com/xiamaozi11/little-story-maker/issues)
 
 ---
 

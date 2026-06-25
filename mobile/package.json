@@ -1,5 +1,5 @@
 {
-  "name": "storycraft-mobile",
+  "name": "little-story-maker",
   "version": "1.0.4",
   "main": "expo-router/entry",
   "scripts": {

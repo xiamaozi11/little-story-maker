@@ -1,7 +1,7 @@
 [project]
-name = "storycraft"
-version = "1.0.0"
-description = "AI-powered children's picture book generator"
+name = "little-story-maker"
+version = "1.0.4"
+description = "Little Story Maker — Android AI picture book and anime creator for children"
 readme = "README.md"
 requires-python = ">=3.11"
 packages = [

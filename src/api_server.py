@@ -30,7 +30,7 @@ from storycraft.config import (
 )
 from storycraft.core.pdf_generator import PDFGenerator
 
-app = FastAPI(title="StoryCraft API", version="1.0.0")
+app = FastAPI(title="Little Story Maker API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,

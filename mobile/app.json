@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "小小故事家",
-    "slug": "storycraft-children",
+    "name": "Little Story Maker",
+    "slug": "little-story-maker",
     "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "storycraft",
+    "scheme": "little-story-maker",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

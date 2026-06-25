@@ -433,7 +433,7 @@ def demo_summary(live: bool) -> None:
     banner("演示完成")
     mode = "真实 API" if live else "演示模式（无 API 调用）"
     print(f"  模式: {mode}")
-    print(f"  App 名称: 小小故事家 v1.0.2")
+    print(f"  App 名称: Little Story Maker v1.0.4")
     print(f"  端侧: MNN Sherpa Zipformer INT8 本地 ASR")
     print(f"  云端: 通义千问 qwen-plus + 通义万象 wan2.6-t2i\n")
 

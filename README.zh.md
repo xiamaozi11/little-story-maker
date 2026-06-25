@@ -1,4 +1,4 @@
-# 小小故事家 📚
+# Little Story Maker 📚
 
 面向 3–8 岁儿童的 **Android AI 绘本与动漫创作 App**。孩子用 **语音或文字** 说出故事想法，AI 帮他们把想象变成专属绘本 PDF，或分镜动漫短视频。
 
@@ -11,7 +11,7 @@
 
 ## ❤️ 关于本项目
 
-**小小故事家** 是一个真实家庭共创的项目：爸爸负责开发与 AI 实现，妈妈把关内容适龄性，哥哥右右抢先创作动漫，妹妹绵绵睡前翻绘本阅读。
+**Little Story Maker** 是一个真实家庭共创的项目：爸爸负责开发与 AI 实现，妈妈把关内容适龄性，哥哥右右抢先创作动漫，妹妹绵绵睡前翻绘本阅读。
 
 每个孩子都值得拥有 **属于自己的故事**——不是看别人的绘本，而是创造自己喜欢的冒险、动物朋友和魔法世界。
 
@@ -33,7 +33,7 @@
 ## 📁 项目结构
 
 ```
-storycraft_children/
+little-story-maker/
 └── mobile/                 # Expo / React Native Android App
     ├── app/                # 页面：创作、编辑、预览、导出、动漫流程
     └── src/
@@ -56,8 +56,8 @@ storycraft_children/
 ### 2. 安装与运行
 
 ```bash
-git clone https://github.com/xiamaozi11/storycraft_children.git
-cd storycraft_children/mobile
+git clone https://github.com/xiamaozi11/little-story-maker.git
+cd little-story-maker/mobile
 npm install
 npx expo start --android
 ```
@@ -144,8 +144,8 @@ A: 检查 API Key、网络，或切换通义 / 豆包插画服务。
 
 ## 📞 反馈与交流
 
-- 🐛 [提交 Issue](https://github.com/xiamaozi11/storycraft_children/issues)
-- 💬 欢迎在 Issues 中分享你用小小故事家创作的作品
+- 🐛 [提交 Issue](https://github.com/xiamaozi11/little-story-maker/issues)
+- 💬 欢迎在 Issues 中分享你用 Little Story Maker 创作的作品
 
 ---
 
@@ -157,7 +157,7 @@ A: 检查 API Key、网络，或切换通义 / 豆包插画服务。
 
 ## 🙏 致谢
 
-感谢开源项目 **[StoryCraft](https://github.com/cn-vhql/StoryCraft)** 的分享与贡献，让我们得以在此基础上打造面向手机端的「小小故事家」，加入语音输入、动漫模式与家庭共创体验。
+感谢开源项目 **[StoryCraft](https://github.com/cn-vhql/StoryCraft)** 的分享与贡献，让我们得以在此基础上打造 **Little Story Maker**，加入语音输入、动漫模式与家庭共创体验。
 
 同时也感谢：
 

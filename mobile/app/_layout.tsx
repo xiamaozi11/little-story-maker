@@ -15,7 +15,7 @@ export default function RootLayout() {
           headerShadowVisible: false,
         }}
       >
-        <Stack.Screen name="index" options={{ title: '📚 小小故事家' }} />
+        <Stack.Screen name="index" options={{ title: '📚 Little Story Maker' }} />
         <Stack.Screen name="settings" options={{ title: '⚙️ API 设置' }} />
         <Stack.Screen name="history" options={{ title: '📚 我的绘本' }} />
         <Stack.Screen name="edit/[id]" options={{ title: '✏️ 编辑故事' }} />

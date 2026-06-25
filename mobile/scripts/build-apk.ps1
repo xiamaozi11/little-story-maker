@@ -42,14 +42,14 @@ try {
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
     $apk = "app\build\outputs\apk\release\app-release.apk"
-    $apkName = "StoryCraft-children-v1.0.4.apk"
+    $apkName = "Little-Story-Maker-v1.0.4.apk"
     $dest = Join-Path $MobileRoot $apkName
     Copy-Item $apk $dest -Force
     $destD = Join-Path "D:\" $apkName
     Copy-Item $apk $destD -Force
     $mb = [math]::Round((Get-Item $dest).Length / 1MB, 2)
     Write-Host ""
-    Write-Host "APK OK ($mb MB) — 安装名: 小小故事家 v1.0.4" -ForegroundColor Green
+    Write-Host "APK OK ($mb MB) — 安装名: Little Story Maker v1.0.4" -ForegroundColor Green
     Write-Host "  $dest"
     Write-Host "  $destD"
 } finally {
