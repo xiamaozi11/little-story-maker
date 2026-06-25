@@ -1,9 +1,8 @@
 # Little Story Maker (小小故事家) 📚
 
-> AI-powered picture book and anime creation for children ages 3–8 — Android app, Streamlit web, and optional Python API
+> Android AI picture book and anime creator for children ages 3–8
 
 [![Version](https://img.shields.io/badge/version-1.0.4-blue)](https://github.com/xiamaozi11/storycraft_children)
-[![Python](https://img.shields.io/badge/python-3.11+-green)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/license-MIT-orange)](LICENSE)
 
 **English** | [简体中文](README.zh.md)
@@ -12,7 +11,7 @@
 
 ## 🌟 About
 
-**Little Story Maker** (*小小故事家*) helps kids turn imagination into **their own** picture books or short anime clips — using **voice or text** to describe an idea, then AI writes the story, draws illustrations, and exports a shareable PDF or video.
+**Little Story Maker** (*小小故事家*) is an Android app that helps kids turn imagination into **their own** picture books or short anime clips — using **voice or text** to describe an idea, then AI writes the story, draws illustrations, and exports a shareable PDF or video.
 
 Born from a real family project: dad builds the tech, mom reviews child-friendly content, big brother creates anime, little sister reads bedtime stories.
 
@@ -24,12 +23,10 @@ Born from a real family project: dad builds the tech, mom reviews child-friendly
 |---------|-------------|
 | 📖 **Picture book mode** | Idea → AI story → illustrations → in-app preview → PDF export |
 | 🎬 **Anime mode** | Storyboard script, character art, 15–60s anime video clips |
-| 🎤 **Voice input** | Local speech recognition — no typing required |
+| 🎤 **Voice input** | MNN on-device speech recognition — no typing required |
 | 🌍 **Bilingual** | Chinese + English for family reading |
 | 🎨 **Art styles** | Manga, anime, Chinese traditional, watercolor, cartoon, and more |
 | 📱 **Standalone mobile** | App calls Tongyi / Doubao APIs directly; data stays on device |
-| 🖥️ **Web UI** | Streamlit picture book generator for desktop |
-| 🔌 **REST API** | Optional FastAPI backend (`src/api_server.py`) |
 
 ---
 
@@ -37,18 +34,18 @@ Born from a real family project: dad builds the tech, mom reviews child-friendly
 
 ```
 storycraft_children/
-├── mobile/                 # Expo / React Native Android app (primary)
-├── src/
-│   ├── app.py              # Streamlit web app
-│   ├── api_server.py       # FastAPI REST API
-│   └── storycraft/         # Core: text, images, PDF, anime
-├── scripts/                # Start scripts, APK build, demos
-└── docs/
+└── mobile/                 # Expo / React Native Android app
+    ├── app/                # Screens: create, edit, preview, export, anime flow
+    └── src/
+        ├── services/       # AI API, PDF, ASR, anime video
+        └── storage/        # Local files and history
 ```
+
+More details: [mobile/README.md](mobile/README.md)
 
 ---
 
-## 🚀 Quick Start: Android App
+## 🚀 Quick Start
 
 ### Prerequisites
 
@@ -92,52 +89,14 @@ npm run build:apk:local
 
 For voice input, download ASR models first: `npm run download:asr-models`
 
-More details: [mobile/README.md](mobile/README.md)
-
 ---
 
-## 🖥️ Web App (Streamlit)
+## 📂 Local Storage
 
-```bash
-cd storycraft_children
-pip install -r requirements.txt
-cp .env.example .env   # add your API_KEY
-streamlit run src/app.py
-```
-
-Open `http://localhost:8501`.
-
-### Environment (`.env`)
-
-```env
-API_KEY=sk-your-api-key-here
-API_ENDPOINT=https://dashscope.aliyuncs.com/compatible-mode/v1
-TEXT_MODEL=qwen-plus
-IMAGE_SERVICE=tongyi
-ARK_API_KEY=your-doubao-key
-IMAGE_SIZE=1104x1472
-VOLC_SEEDANCE_API_KEY=...   # optional, for anime video
-```
-
----
-
-## 🔌 API Server (Optional)
-
-```bash
-scripts/start_api.bat      # Windows
-scripts/start_api.sh       # Linux / macOS
-```
-
-Default: `http://localhost:8000`
-
----
-
-## 📂 Output & Storage
-
-| Client | Location |
-|--------|----------|
-| Web / API | `output/` (timestamped folders) |
-| Mobile | Device `documentDirectory/books/{id}/` + AsyncStorage metadata |
+| Data | Location |
+|------|----------|
+| Book metadata | AsyncStorage |
+| Images & PDF | Device `documentDirectory/books/{id}/` |
 
 ---
 
@@ -148,6 +107,19 @@ Default: `http://localhost:8000`
 3. Keep scenes moderate (3–10 pages for books)
 4. Preview before exporting PDF
 5. Parents should review AI-generated content before kids read/watch
+
+---
+
+## 🛠️ FAQ
+
+**Q: Does the API cost money?**  
+A: Tongyi Qianwen and Doubao offer free tiers for new users — enough for occasional family use.
+
+**Q: Does it need internet?**  
+A: Story and image generation requires network access; speech recognition runs on-device on Android (MNN).
+
+**Q: Image generation failed?**  
+A: Check your API key, network, or try switching between Tongyi and Doubao image services.
 
 ---
 

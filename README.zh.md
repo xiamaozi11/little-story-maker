@@ -1,9 +1,8 @@
 # 小小故事家 📚
 
-面向 3–8 岁儿童的 **AI 绘本与动漫创作 App**（Android），同时保留 Streamlit Web 版与 Python 后端。孩子用 **语音或文字** 说出故事想法，AI 帮他们把想象变成专属绘本 PDF，或分镜动漫短视频。
+面向 3–8 岁儿童的 **Android AI 绘本与动漫创作 App**。孩子用 **语音或文字** 说出故事想法，AI 帮他们把想象变成专属绘本 PDF，或分镜动漫短视频。
 
 ![Version](https://img.shields.io/badge/version-1.0.4-blue)
-![Python](https://img.shields.io/badge/python-3.11+-green)
 ![License](https://img.shields.io/badge/license-MIT-orange)
 
 **[English](README.md)** | **简体中文**
@@ -24,12 +23,10 @@
 |------|------|
 | 📖 **绘本模式** | 输入创意 → AI 写故事 → 生成插画 → 手机翻页预览 → 导出 PDF |
 | 🎬 **动漫模式** | 生成分镜剧本、角色立绘，并合成 15–60 秒动漫短视频 |
-| 🎤 **语音输入** | 支持本地语音识别，不会打字也能讲故事 |
+| 🎤 **语音输入** | MNN 本地语音识别，不会打字也能讲故事 |
 | 🌍 **中英双语** | 故事自动翻译，方便亲子共读与启蒙 |
 | 🎨 **多种画风** | 漫画、动漫、中国风、水彩、卡通等 |
 | 📱 **纯手机运行** | App 直连通义千问 / 豆包 API，绘本数据保存在本机 |
-| 🖥️ **Web 版** | 保留 Streamlit 绘本生成器，适合电脑端创作 |
-| 🔌 **API 服务** | 可选 FastAPI 后端，供扩展集成 |
 
 ---
 
@@ -37,20 +34,18 @@
 
 ```
 storycraft_children/
-├── mobile/                 # Expo / React Native Android App（主入口）
-│   ├── app/                # 页面：创作、编辑、预览、导出、动漫流程
-│   └── src/services/       # 直连 AI API、本地存储、PDF、语音 ASR
-├── src/
-│   ├── app.py              # Streamlit Web 应用
-│   ├── api_server.py       # FastAPI REST API
-│   └── storycraft/         # 故事生成、插画、PDF 核心逻辑
-├── scripts/                # 启动脚本、APK 构建、演示脚本
-└── docs/                   # 创意文档等
+└── mobile/                 # Expo / React Native Android App
+    ├── app/                # 页面：创作、编辑、预览、导出、动漫流程
+    └── src/
+        ├── services/       # 直连 AI API、PDF、语音 ASR、动漫视频
+        └── storage/        # 本地文件与历史记录
 ```
+
+更多细节见 [mobile/README.md](mobile/README.md)。
 
 ---
 
-## 🚀 快速开始：Android App
+## 🚀 快速开始
 
 ### 1. 环境要求
 
@@ -97,53 +92,12 @@ npm run build:apk:local
 
 ---
 
-## 🖥️ Web 版（Streamlit）
+## 📂 本地存储
 
-适合在电脑上批量创作绘本：
-
-```bash
-cd storycraft_children
-pip install -r requirements.txt
-cp .env.example .env   # 填入 API_KEY 等
-streamlit run src/app.py
-```
-
-浏览器访问 `http://localhost:8501`。
-
-### 环境变量（`.env`）
-
-```env
-API_KEY=sk-你的API密钥
-API_ENDPOINT=https://dashscope.aliyuncs.com/compatible-mode/v1
-TEXT_MODEL=qwen-plus
-IMAGE_SERVICE=tongyi          # 或 doubao
-ARK_API_KEY=你的豆包Key         # 使用豆包插画时
-IMAGE_SIZE=1104x1472
-VOLC_SEEDANCE_API_KEY=...     # 动漫视频（可选）
-```
-
----
-
-## 🔌 API 服务（可选）
-
-```bash
-# Windows
-scripts\start_api.bat
-
-# Linux / macOS
-scripts/start_api.sh
-```
-
-默认 `http://localhost:8000`，提供故事生成、插画、PDF 等 REST 接口（详见 `src/api_server.py`）。
-
----
-
-## 📂 输出与存储
-
-| 端 | 位置 |
-|----|------|
-| Web / API | `output/` 目录，按时间戳分文件夹 |
-| 手机 App | 本机 `documentDirectory/books/{id}/`，元数据在 AsyncStorage |
+| 数据 | 位置 |
+|------|------|
+| 绘本元数据 | AsyncStorage |
+| 插画与 PDF | 本机 `documentDirectory/books/{id}/` |
 
 ---
 
@@ -151,8 +105,8 @@ scripts/start_api.sh
 
 | 风格 | 特点 | 推荐场景 |
 |------|------|----------|
-| 漫画风 | 黑白线条，清晰简洁 | Kindle |
-| 动漫 | 彩色鲜艳 | 平板、手机 |
+| 漫画风 | 黑白线条，清晰简洁 | 电子阅读 |
+| 动漫 | 彩色鲜艳 | 手机、平板 |
 | 中国风 | 传统国画 | 国学主题 |
 | 卡通 | 可爱简单 | 3–5 岁 |
 | 水彩 / 油画 / 古典 | 艺术感强 | 温馨或经典童话 |
@@ -174,8 +128,8 @@ scripts/start_api.sh
 **Q: API 要花钱吗？**  
 A: 通义千问、豆包新用户有免费额度，家庭偶尔创作一般够用。
 
-**Q: 手机和 Web 数据能同步吗？**  
-A: 目前各自独立存储；手机端不依赖后端即可完整使用。
+**Q: 需要联网吗？**  
+A: 故事与插画生成需联网调用 AI；语音识别在 Android 上可本地运行（MNN）。
 
 **Q: 图片生成失败？**  
 A: 检查 API Key、网络，或切换通义 / 豆包插画服务。
