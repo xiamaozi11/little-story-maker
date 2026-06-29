@@ -1,4 +1,10 @@
-"""生成移动端占位图标。"""
+"""生成移动端 App 图标。
+
+优先使用百炼万象生成（需 .env 配置 API_KEY）：
+  python scripts/gen_app_logo.py
+
+本脚本仅作离线占位（无 API 时使用）。
+"""
 from pathlib import Path
 
 from PIL import Image, ImageDraw

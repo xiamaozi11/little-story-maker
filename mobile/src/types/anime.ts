@@ -22,6 +22,8 @@ export interface AnimeShot {
   index: number;
   text: string;
   video_prompt?: string;
+  /** 角色对白，格式如「小兔：「我们出发吧！」」 */
+  dialogue?: string;
 }
 
 export interface AnimeSegment {
@@ -41,6 +43,10 @@ export interface AnimeScript {
   shots: AnimeShot[];
   segments: AnimeSegment[];
   completed?: boolean;
+  /** 多段视频合成后的完整 MP4 本地路径 */
+  merged_video_path?: string;
+  merged_video_status?: AssetStatus;
+  merged_video_error?: string;
 }
 
 export interface AnimeData {
@@ -60,7 +66,7 @@ export interface AnimeStoryboardResult {
   scripts: {
     title: string;
     synopsis: string;
-    shots: { text: string; video_prompt?: string }[];
+    shots: { text: string; video_prompt?: string; dialogue?: string }[];
   }[];
   num_segments?: number;
 }

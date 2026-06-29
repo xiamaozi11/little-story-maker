@@ -78,6 +78,9 @@ export default function AnimeEditScreen() {
               <View key={shot.index} style={styles.shotRow}>
                 <Text style={styles.shotLabel}>镜头 {i + 1}</Text>
                 <Text style={styles.shotText}>{shot.text}</Text>
+                {shot.dialogue ? (
+                  <Text style={styles.dialogueText}>💬 {shot.dialogue}</Text>
+                ) : null}
               </View>
             ))}
           </Card>
@@ -125,4 +128,11 @@ const styles = StyleSheet.create({
   },
   shotLabel: { fontWeight: '600', color: colors.primary, fontSize: fontSize.sm },
   shotText: { color: colors.text, fontSize: fontSize.sm, marginTop: 4, lineHeight: 20 },
+  dialogueText: {
+    color: colors.text,
+    fontSize: fontSize.sm,
+    marginTop: 6,
+    fontStyle: 'italic',
+    lineHeight: 20,
+  },
 });

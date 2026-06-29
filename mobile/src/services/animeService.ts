@@ -5,12 +5,18 @@ import {
   SEGMENT_DURATION_SEC,
   SHOTS_PER_SEGMENT,
 } from '../config/constants';
+import * as FileSystem from 'expo-file-system';
 import {
   createBookId,
   getBook,
   saveBook,
 } from '../storage/historyStore';
-import { saveImageFromUrl, saveVideoFromUrl } from '../storage/fileStore';
+import {
+  getMergedVideoPath,
+  getSegmentVideoPath,
+  saveImageFromUrl,
+  saveVideoFromUrl,
+} from '../storage/fileStore';
 import {
   AnimeCharacter,
   AnimeData,
@@ -26,6 +32,7 @@ import {
 } from './animeTextService';
 import { buildSeedancePromptWithRefs, postSeedanceAndWait } from './seedanceService';
 import { loadSettings } from './settings';
+import { mergeLocalVideos } from './videoMergeService';
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -44,14 +51,115 @@ function getCharacterRefsForSeedance(characters: AnimeCharacter[]): {
 }
 
 function shotsWithIndex(
-  shots: { text: string; video_prompt?: string }[],
+  shots: { text: string; video_prompt?: string; dialogue?: string }[],
   baseIndex = 0
 ): AnimeShot[] {
   return shots.map((s, i) => ({
     index: baseIndex + i,
     text: s.text,
     video_prompt: s.video_prompt,
+    dialogue: s.dialogue?.trim() || undefined,
   }));
+}
+
+function clearScriptMergedVideo(script: AnimeScript): void {
+  delete script.merged_video_path;
+  delete script.merged_video_status;
+  delete script.merged_video_error;
+}
+
+function segmentIsPlayable(seg: AnimeSegment): boolean {
+  return seg.status === 'ok' || Boolean(seg.video_path || seg.video_url);
+}
+
+function scriptPlayableSegmentCount(script: AnimeScript): number {
+  return script.segments.filter(segmentIsPlayable).length;
+}
+
+function scriptAllSegmentsPlayable(script: AnimeScript): boolean {
+  return (
+    script.segments.length > 0 &&
+    script.segments.every(segmentIsPlayable)
+  );
+}
+
+/** 从本地磁盘恢复历史动漫项目的视频路径（兼容旧数据） */
+export async function hydrateAnimeVideoFiles(book: Book): Promise<Book> {
+  if (!book.anime) return book;
+
+  let changed = false;
+  for (const script of book.anime.scripts) {
+    for (const seg of script.segments) {
+      const expectedPath = getSegmentVideoPath(
+        book.id,
+        script.index,
+        seg.segment_index
+      );
+      const diskInfo = await FileSystem.getInfoAsync(expectedPath);
+      if (diskInfo.exists) {
+        if (seg.video_path !== expectedPath) {
+          seg.video_path = expectedPath;
+          changed = true;
+        }
+        if (seg.status !== 'ok') {
+          seg.status = 'ok';
+          changed = true;
+        }
+      } else if (seg.video_path) {
+        const pathInfo = await FileSystem.getInfoAsync(seg.video_path);
+        if (!pathInfo.exists) {
+          delete seg.video_path;
+          if (seg.status === 'ok') seg.status = 'pending';
+          changed = true;
+        } else if (seg.status !== 'ok') {
+          seg.status = 'ok';
+          changed = true;
+        }
+      }
+    }
+
+    const mergedPath = getMergedVideoPath(book.id, script.index);
+    const mergedInfo = await FileSystem.getInfoAsync(mergedPath);
+    if (mergedInfo.exists) {
+      if (script.merged_video_path !== mergedPath) {
+        script.merged_video_path = mergedPath;
+        changed = true;
+      }
+      if (script.merged_video_status !== 'ok') {
+        script.merged_video_status = 'ok';
+        delete script.merged_video_error;
+        changed = true;
+      }
+    } else if (script.merged_video_path) {
+      const pathInfo = await FileSystem.getInfoAsync(script.merged_video_path);
+      if (!pathInfo.exists) {
+        clearScriptMergedVideo(script);
+        changed = true;
+      }
+    }
+  }
+
+  const hasVideos = book.anime.scripts.some(
+    (s) =>
+      s.segments.some(segmentIsPlayable) ||
+      (s.merged_video_status === 'ok' && Boolean(s.merged_video_path))
+  );
+  if (book.anime.has_videos !== hasVideos) {
+    book.anime.has_videos = hasVideos;
+    book.has_images = hasVideos;
+    changed = true;
+  }
+
+  if (changed) {
+    await saveBook(book);
+  }
+  return book;
+}
+
+export async function loadAnimeBook(bookId: string): Promise<Book | null> {
+  const book = await getBook(bookId);
+  if (!book?.anime) return book;
+  return hydrateAnimeVideoFiles(book);
 }
 
 function buildAnimeDataFromBoard(
@@ -274,6 +382,7 @@ async function generateScriptSegmentsFrom(
     const segShots = segment.shots.map((s) => ({
       text: s.text,
       video_prompt: s.video_prompt,
+      dialogue: s.dialogue,
     }));
 
     segment.status = 'generating';
@@ -431,6 +540,7 @@ export async function regenerateAnimeSegment(
     delete seg.video_path;
     delete seg.task_id;
   }
+  clearScriptMergedVideo(script);
   script.completed = false;
   await saveBook(book);
 
@@ -499,3 +609,81 @@ export async function regenerateFailedAnimeVideos(
 }
 
 export { DEFAULT_ANIME_IMAGE_STYLE };
+
+/** 将剧本下所有已完成的视频段合成为一条完整 MP4 */
+export async function mergeAnimeScriptVideo(
+  bookId: string,
+  scriptIndex: number,
+  onProgress?: (message: string) => void
+): Promise<Book> {
+  let book = await getBook(bookId);
+  if (!book?.anime) throw new Error('动漫项目不存在');
+  book = await hydrateAnimeVideoFiles(book);
+
+  const script = book.anime.scripts[scriptIndex];
+  if (!script) throw new Error('剧本不存在');
+
+  if (scriptPlayableSegmentCount(script) < 2) {
+    throw new Error('至少需要 2 段已生成的视频才能合成完整版');
+  }
+  if (!scriptAllSegmentsPlayable(script)) {
+    throw new Error('请先完成全部视频段生成后再合成');
+  }
+
+  onProgress?.('准备合成完整视频...');
+
+  const paths: string[] = [];
+  for (const seg of script.segments) {
+    if (seg.video_path) {
+      const info = await FileSystem.getInfoAsync(seg.video_path);
+      if (info.exists) {
+        paths.push(seg.video_path);
+        continue;
+      }
+    }
+    const diskPath = getSegmentVideoPath(bookId, script.index, seg.segment_index);
+    const diskInfo = await FileSystem.getInfoAsync(diskPath);
+    if (diskInfo.exists) {
+      seg.video_path = diskPath;
+      paths.push(diskPath);
+      continue;
+    }
+    if (seg.video_url) {
+      onProgress?.(`下载第 ${seg.segment_index + 1} 段...`);
+      seg.video_path = await saveVideoFromUrl(
+        bookId,
+        `script${script.index}_seg${seg.segment_index}`,
+        seg.video_url
+      );
+      paths.push(seg.video_path);
+      continue;
+    }
+    throw new Error(`第 ${seg.segment_index + 1} 段缺少视频文件`);
+  }
+
+  script.merged_video_status = 'generating';
+  delete script.merged_video_error;
+  await saveBook(book);
+
+  try {
+    onProgress?.('正在合并多段镜头...');
+    const mergedPath = await mergeLocalVideos(
+      bookId,
+      paths,
+      `script${script.index}_merged`
+    );
+    script.merged_video_path = mergedPath;
+    script.merged_video_status = 'ok';
+    delete script.merged_video_error;
+    book.anime.has_videos = true;
+    book.has_images = true;
+  } catch (e) {
+    script.merged_video_status = 'failed';
+    script.merged_video_error = e instanceof Error ? e.message : '合成失败';
+    throw e;
+  } finally {
+    await saveBook(book);
+  }
+
+  return hydrateAnimeVideoFiles(book);
+}

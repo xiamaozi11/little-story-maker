@@ -6,6 +6,18 @@ export function getBookDir(bookId: string): string {
   return `${BOOKS_ROOT}${bookId}/`;
 }
 
+export function getSegmentVideoPath(
+  bookId: string,
+  scriptIndex: number,
+  segmentIndex: number
+): string {
+  return `${getBookDir(bookId)}script${scriptIndex}_seg${segmentIndex}.mp4`;
+}
+
+export function getMergedVideoPath(bookId: string, scriptIndex: number): string {
+  return `${getBookDir(bookId)}script${scriptIndex}_merged.mp4`;
+}
+
 export async function ensureBookDir(bookId: string): Promise<string> {
   const dir = getBookDir(bookId);
   const info = await FileSystem.getInfoAsync(dir);

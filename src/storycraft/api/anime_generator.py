@@ -49,13 +49,16 @@ def _build_segment_prompt(
         start = i * 3
         end = start + 3
         text = shot.get("text", "")
+        dialogue = shot.get("dialogue", "")
         vp = shot.get("video_prompt", "")
         lines.append(f"镜头{i + 1}（{start}-{end}秒）：{text}")
+        if dialogue:
+            lines.append(f"  对白：{dialogue}")
         if vp:
             lines.append(f"  画面：{vp}")
     lines.append(
         "要求：日本动漫 cel shading 风格，儿童向，色彩明亮，动作流畅，"
-        "镜头间自然过渡，无暴力恐怖元素。"
+        "镜头间自然过渡，角色口型与对白匹配，无暴力恐怖元素。"
     )
     return "\n".join(lines)
 

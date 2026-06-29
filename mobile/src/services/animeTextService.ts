@@ -71,6 +71,8 @@ function buildAnimeStoryboardPrompt(
 **镜头要求**：
 - 每个镜头写清画面动作、景别（特写/中景/全景）、情绪
 - video_prompt 为英文，描述该镜头动画画面，适合 AI 视频生成
+- 有角色说话或旁白的镜头，必须写 dialogue（中文，格式「角色名：「台词内容」」；旁白用「旁白：「…」」）；纯动作无台词可省略 dialogue
+- 对白要符合 3–8 岁儿童用语，简短生动，与画面情绪一致
 - 镜头之间动作连贯，适合 15 秒一段的流畅动漫短片
 
 请只输出 JSON（无其他文字）：
@@ -91,6 +93,7 @@ function buildAnimeStoryboardPrompt(
       "shots": [
         {
           "text": "镜头中文描述",
+          "dialogue": "角色名：「台词内容」（无对白可省略此字段）",
           "video_prompt": "镜头英文动画画面描述"
         }
       ]
@@ -113,7 +116,7 @@ function parseAnimeStoryboard(
     const start = response.indexOf('{');
     const end = response.lastIndexOf('}') + 1;
     const data = JSON.parse(response.slice(start, end)) as AnimeStoryboardResult & {
-      scripts: { title: string; synopsis: string; shots: { text: string; video_prompt?: string }[] }[];
+      scripts: { title: string; synopsis: string; shots: { text: string; video_prompt?: string; dialogue?: string }[] }[];
     };
 
     const primary = data.scripts?.[0];
@@ -185,7 +188,7 @@ export async function generateAnimeStoryboard(
   const prompt = buildAnimeStoryboardPrompt(idea, character, segments);
   const response = await chatCompletion(
     settings,
-    '你是专业的儿童动漫分镜编剧，擅长将故事拆解为连贯的镜头剧本。',
+    '你是专业的儿童动漫分镜编剧，擅长将故事拆解为连贯的镜头剧本，并为角色撰写适合儿童的对白。',
     prompt,
     0.75
   );
@@ -193,7 +196,7 @@ export async function generateAnimeStoryboard(
 }
 
 export function buildSegmentPrompt(
-  shots: { text: string; video_prompt?: string }[],
+  shots: { text: string; video_prompt?: string; dialogue?: string }[],
   scriptTitle: string,
   segmentIndex: number,
   isContinuation: boolean
@@ -206,19 +209,22 @@ export function buildSegmentPrompt(
     const start = i * 3;
     const end = start + 3;
     lines.push(`镜头${i + 1}（${start}-${end}秒）：${shot.text}`);
+    if (shot.dialogue?.trim()) {
+      lines.push(`  对白：${shot.dialogue.trim()}`);
+    }
     if (shot.video_prompt) {
       lines.push(`  画面：${shot.video_prompt}`);
     }
   });
   lines.push(
-    '要求：日本动漫 cel shading 风格，儿童向，色彩明亮，动作流畅，镜头间自然过渡，无暴力恐怖元素。'
+    '要求：日本动漫 cel shading 风格，儿童向，色彩明亮，动作流畅，镜头间自然过渡，角色口型与对白匹配，无暴力恐怖元素。'
   );
   return lines.join('\n');
 }
 
-export function groupShotsIntoSegments<T extends { text: string; video_prompt?: string }>(
-  shots: T[]
-): T[][] {
+export function groupShotsIntoSegments<
+  T extends { text: string; video_prompt?: string; dialogue?: string },
+>(shots: T[]): T[][] {
   const segments: T[][] = [];
   for (let i = 0; i < shots.length; i += SHOTS_PER_SEGMENT) {
     const chunk = shots.slice(i, i + SHOTS_PER_SEGMENT);
